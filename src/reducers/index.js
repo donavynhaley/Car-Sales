@@ -1,7 +1,9 @@
+import { ADD_FEATURE, REMOVE_FEATURE } from "../actions";
+
 export const initialState = {
   additionalPrice: 0,
   car: {
-    price: 26395,
+    price: 1000,
     name: "2019 Ford Mustang",
     image:
       "https://cdn.motor1.com/images/mgl/0AN2V/s1/2019-ford-mustang-bullitt.jpg",
@@ -15,6 +17,37 @@ export const initialState = {
   ],
 };
 
-export function reducer() {
-  return initialState;
+export function reducer(state = initialState, action) {
+  switch (action.type) {
+    case ADD_FEATURE:
+      console.log(action);
+      return {
+        ...state,
+        additionalPrice: state.additionalPrice + action.payload.price,
+        additionalFeatures: state.additionalFeatures.filter(
+          (feature) => feature.id !== action.payload.id
+        ),
+        car: {
+          ...state.car,
+          features: [...state.car.features, action.payload],
+        },
+      };
+      break;
+    case REMOVE_FEATURE:
+      console.log(action);
+      return {
+        ...state,
+        additionalPrice: state.additionalPrice - action.payload.price,
+        additionalFeatures: [...state.additionalFeatures, action.payload],
+        car: {
+          ...state.car,
+          features: state.car.features.filter(
+            (feature) => feature.id !== action.payload.id
+          ),
+        },
+      };
+      break;
+    default:
+      return state;
+  }
 }
